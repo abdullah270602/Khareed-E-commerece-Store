@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+
+
+{% block title %}Wishlist{% endblock title %}
+    
+
+
+{% block content %}
+
+<div class="mt-8 bg-white mx-6 my-6">
+    <div class="bg-gray-200 p-4 rounded-lg mb-6">
+        <h1 class="text-center text-2xl font-bold">Wishlist ❤️</h1>
+        <p class="text-center">{{ wishlist_items|length }} items in wishlist</p>
+    </div>
+    <div class="md:w-4/5 mx-auto">
+        {% for product in wishlist_items %}
+        <div class="mb-6 rounded-lg bg-gray-200 p-6 shadow-md sm:flex sm:justify-start relative">
+            <!-- Remove Button -->
+            <form method="post" action="{% url 'products:remove_from_wishlist' product.id %}">
+                {% csrf_token %}
+                <button type="submit" class="h-5 w-5 absolute top-2 right-2 cursor-pointer duration-150 hover:text-red-500" title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </form>
+            <img src="{{ product.product.product_images.first.product_image.url }}" alt="product-image" class="w-full rounded-lg sm:w-40" />
+            <div class="sm:ml-4 sm:w-full sm:justify-between">
+                <div class="mt-5 sm:mt-0">
+                    <h2 class="text-lg font-bold text-gray-900">{{ product.product.product_name }}</h2>
+                    <p class="text-sm">${{ product.product.price }}</p>
+                </div>
+                <div class="flex items-center space-x-4 absolute bottom-2 right-2">
+                    {% if not item_in_cart %}  
+                    <div class="w-1/2 pr-2">
+                        <a href="{% url 'cart:add_to_cart' product.id %}">
+                            <button class="w-full bg-gray-900 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 ">Add to Cart</button>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="w-1/2 pr-2">
+                        <a href="{% url 'cart:cart'  %}">
+                            <button class="w-full bg-blue-800 text-white py-2 px-4 rounded-full font-bold hover:bg-blue-500 flex items-center justify-center">
+                                In Cart
+                                <span class="ml-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
+                                        <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                        </a>
+                    </div>                         
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock content %}
+
